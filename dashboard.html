@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Port Master • لوحة التحكم</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    html { scroll-behavior: smooth; }
+    body { direction: rtl; }
+
+    .bg-anim{
+      background: radial-gradient(1200px 600px at 20% 10%, rgba(0,229,255,0.14), transparent 60%),
+                  radial-gradient(900px 500px at 80% 20%, rgba(106,56,251,0.16), transparent 55%),
+                  linear-gradient(180deg, #07121E 0%, #05070C 60%, #000 100%);
+    }
+    .glass{
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.10);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+    .neon{
+      box-shadow:
+        0 0 0 1px rgba(0,229,255,0.15),
+        0 0 30px rgba(0,229,255,0.10),
+        0 0 60px rgba(106,56,251,0.10);
+    }
+    .reveal { opacity: 0; transform: translateY(12px); transition: 700ms ease; }
+    .reveal.show { opacity: 1; transform: translateY(0); }
+
+    #copilotOut { min-height: 140px; }
+    #copilotOut .copilot-card { width: 100%; }
+    #copilotOut .copilot-card * { max-width: 100%; }
+    #copilotOut p, #copilotOut li { white-space: pre-wrap; word-break: break-word; }
+    #copilotApply, #copilotReset, #copilotSend, #btnExplain { white-space: nowrap; }
+
+    .drawer-backdrop{ position: fixed; inset: 0; background: rgba(0,0,0,0.55); display:none; }
+    .drawer{
+      position: fixed; top: 0; right: 0; height: 100vh; width: min(520px, 92vw);
+      transform: translateX(100%); transition: 260ms ease;
+      background: rgba(10,16,28,0.92); border-left: 1px solid rgba(255,255,255,0.10);
+      backdrop-filter: blur(18px);
+    }
+    .drawer.open{ transform: translateX(0); }
+    .drawer-backdrop.show{ display:block; }
+  </style>
+</head>
+
+<body class="text-white bg-black">
+  <header class="fixed top-0 w-full z-50">
+    <nav class="mx-auto max-w-6xl px-4">
+      <div class="mt-4 glass neon rounded-2xl px-5 py-3 flex items-center justify-between">
+        <a href="index.html" class="flex items-center gap-3">
+          <div class="h-9 w-9 rounded-xl bg-cyan-500/15 border border-cyan-300/20 flex items-center justify-center">
+            <span class="text-cyan-300 font-bold">AI</span>
+          </div>
+          <div>
+            <div class="font-extrabold tracking-wide">AI Port Master</div>
+            <div class="text-xs text-gray-400 -mt-0.5">لوحة تحكم مباشرة</div>
+          </div>
+        </a>
+
+        <div class="hidden md:flex items-center gap-7 text-sm text-gray-200">
+          <a href="index.html#features" class="hover:text-cyan-300 transition">المميزات</a>
+          <a href="dashboard.html" class="text-cyan-300 transition">لوحة التحكم</a>
+          <a href="how.html" class="hover:text-cyan-300 transition">كيف يعمل</a>
+          <a href="contact.php" class="hover:text-cyan-300 transition">تواصل معنا</a>
+          <a href="incident.html" class="hover:text-cyan-300 transition">البلاغات الذكية</a>
+          <a href="shift.html" class="hover:text-cyan-300 transition">تخطيط الشفتات</a>
+          <a href="energy.html" class="hover:text-cyan-300 transition">محسن الطاقة</a>
+          <a href="training.html" class="hover:text-cyan-300 transition">التدريب الذكي</a>
+          <a href="maintenance.html" class="hover transition">الصيانة التنبؤية</a>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button id="btn-refresh"
+            class="px-4 py-2 rounded-xl glass border border-white/10 hover:border-cyan-300/30 hover:text-cyan-200 transition text-sm">
+            تحديث
+          </button>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main class="bg-anim min-h-screen pt-28">
+    <div class="mx-auto max-w-6xl px-4 py-10">
+      <div class="reveal text-center">
+        <h1 class="text-4xl font-extrabold">لوحة التحكم <span class="text-cyan-300">التجريبية</span></h1>
+        <p class="mt-3 text-gray-400">ودجات شبه حيّة (JSON → جاهزة للتحويل إلى API).</p>
+        <div id="statusBar" class="mt-3 text-sm text-gray-300">جاري التحميل…</div>
+      </div>
+
+      <div class="mt-6 glass neon rounded-3xl p-4 reveal">
+        <div class="grid md:grid-cols-3 gap-3 items-center">
+          <div>
+            <div class="text-xs text-gray-400 mb-2">Scenario Mode</div>
+            <div class="flex gap-2 flex-wrap">
+              <button data-scn="normal" class="scnBtn px-3 py-2 rounded-xl glass border border-white/10 hover:border-cyan-300/30 text-sm">Normal</button>
+              <button data-scn="peak" class="scnBtn px-3 py-2 rounded-xl glass border border-white/10 hover:border-amber-300/30 text-sm">Peak</button>
+              <button data-scn="storm" class="scnBtn px-3 py-2 rounded-xl glass border border-white/10 hover:border-violet-300/30 text-sm">Storm</button>
+              <button data-scn="failure" class="scnBtn px-3 py-2 rounded-xl glass border border-white/10 hover:border-rose-300/30 text-sm">Equipment Failure</button>
+            </div>
+            <div class="mt-2 text-xs text-gray-400">Scenario الحالي: <span id="scnLabel">Normal</span></div>
+          </div>
+
+          <div>
+            <div class="text-xs text-gray-400 mb-2">Role View</div>
+            <select id="roleSelect"
+              class="w-full rounded-2xl bg-black/30 border border-white/10 px-4 py-3 outline-none focus:border-cyan-300/40 text-sm">
+              <option value="ops">Operations (Default)</option>
+              <option value="berth">Berth Manager</option>
+              <option value="energy">Energy Manager</option>
+              <option value="safety">Safety/Security</option>
+            </select>
+            <div class="mt-2 text-xs text-gray-400">يغيّر الودجات والتركيز حسب الدور.</div>
+          </div>
+
+          <div>
+            <div class="text-xs text-gray-400 mb-2">Live Stream</div>
+            <div class="flex items-center gap-2 flex-wrap">
+              <label class="flex items-center gap-2 glass border border-white/10 rounded-2xl px-4 py-3">
+                <input id="liveToggle" type="checkbox" class="accent-cyan-300" />
+                <span class="text-sm text-gray-200">Live</span>
+              </label>
+
+              <button id="freezeBtn"
+                class="px-4 py-3 rounded-2xl glass border border-white/10 text-sm font-bold hover:border-amber-300/30 hover:text-amber-200 transition">
+                Freeze
+              </button>
+
+              <span class="text-xs text-gray-400">Polling ديمو (Fake realtime).</span>
+            </div>
+            <div class="mt-2 text-xs text-gray-400" id="liveHint">Live: Off</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-6 grid sm:grid-cols-3 gap-4" data-role="ops berth energy safety">
+        <div class="glass neon rounded-2xl p-5 reveal" data-role="ops berth">
+          <div class="text-sm text-gray-400">وقت انتظار السفن</div>
+          <div class="mt-2 text-3xl font-extrabold text-cyan-300">↓ <span id="kpi-wait">--</span>%</div>
+          <div class="mt-1 text-xs text-gray-400">تقليل الغرامات والتأخير</div>
+        </div>
+
+        <div class="glass neon rounded-2xl p-5 reveal" data-role="ops berth">
+          <div class="text-sm text-gray-400">إنتاجية الميناء</div>
+          <div class="mt-2 text-3xl font-extrabold text-white">↑ <span id="kpi-throughput">--</span>%</div>
+          <div class="mt-1 text-xs text-gray-400">مناولات أكثر بالساعة</div>
+        </div>
+
+        <div class="glass neon rounded-2xl p-5 reveal" data-role="ops energy">
+          <div class="text-sm text-gray-400">انبعاثات CO₂</div>
+          <div class="mt-2 text-3xl font-extrabold text-violet-300">↓ <span id="kpi-co2">--</span>%</div>
+          <div class="mt-1 text-xs text-gray-400">استهلاك طاقة أذكى</div>
+        </div>
+      </div>
+
+      <div class="mt-5 glass neon rounded-3xl p-6 reveal" data-role="ops berth energy safety">
+        <div class="flex items-center justify-between">
+          <h3 class="text-lg font-bold">ملخص تشغيلي من الذكاء الاصطناعي</h3>
+          <span class="text-xs text-gray-400">يتم توليده تلقائيًا</span>
+        </div>
+        <div class="mt-4">
+          <div class="text-sm text-gray-400">الحالة</div>
+          <div id="insightLevel" class="mt-1 text-xl font-extrabold text-cyan-200">--</div>
+
+          <div class="mt-4 text-sm text-gray-400">التوصية</div>
+          <div id="insightRec" class="mt-1 text-gray-200">--</div>
+
+          <div class="mt-4 text-sm text-gray-400">الأثر المتوقع</div>
+          <div id="insightImpact" class="mt-1 text-gray-200">--</div>
+        </div>
+      </div>
+
+      <div class="mt-5 glass neon rounded-3xl p-6 reveal" data-role="ops berth energy safety">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="text-lg font-bold">Port AI Copilot</h3>
+            <p class="text-sm text-gray-400 mt-1">خطة تشغيل Structured + Explainability + What-if</p>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button id="copilotDemo"
+              class="px-3 py-2 rounded-xl glass border border-white/10 hover:border-cyan-300/30 hover:text-cyan-200 transition text-sm">
+              Demo
+            </button>
+            <button id="btnExplain"
+              class="px-3 py-2 rounded-xl glass border border-white/10 hover:border-violet-300/30 hover:text-violet-200 transition text-sm">
+              ليش؟
+            </button>
+            <span id="copilotBadge" class="text-xs px-2 py-1 rounded-lg bg-white/10 text-gray-200 border border-white/10">Ready</span>
+          </div>
+        </div>
+
+        <div class="mt-4 grid lg:grid-cols-3 gap-4">
+          <div class="lg:col-span-1">
+            <div class="text-sm text-gray-400 mb-2">اسألي سؤال تشغيلي</div>
+            <input id="copilotInput"
+              class="w-full rounded-2xl bg-black/30 border border-white/10 px-4 py-3 outline-none focus:border-cyan-300/40"
+              placeholder="مثال: وش تتوقع خلال 6 ساعات؟ وش أفضل توزيع أرصفة؟" />
+
+            <div class="mt-3 flex gap-2 flex-wrap items-center">
+              <button id="copilotSend"
+                class="flex-1 min-w-[160px] px-4 py-3 rounded-2xl bg-cyan-500/80 hover:bg-cyan-500 transition font-extrabold">
+                Send to AI
+              </button>
+
+              <button id="copilotApply" disabled
+                class="px-4 py-3 rounded-2xl glass border border-white/10 text-sm font-extrabold opacity-60 cursor-not-allowed hover:border-emerald-300/30 hover:text-emerald-200 transition">
+                Apply
+              </button>
+
+              <button id="copilotReset" disabled
+                class="px-4 py-3 rounded-2xl glass border border-white/10 text-sm font-extrabold opacity-60 cursor-not-allowed hover:border-rose-300/30 hover:text-rose-200 transition">
+                Reset
+              </button>
+            </div>
+
+            <div id="applyNote" class="mt-3 text-xs text-gray-400"></div>
+
+            <div class="mt-4 glass border border-white/10 rounded-2xl p-4">
+              <div class="flex items-center justify-between">
+                <div class="text-sm font-bold text-gray-200">What-if Simulator</div>
+                <div class="text-xs text-gray-400">قبل Apply</div>
+              </div>
+              <div class="mt-3 grid grid-cols-2 gap-2">
+                <button id="sim30"
+                  class="px-3 py-2 rounded-xl glass border border-white/10 hover:border-cyan-300/30 text-sm">
+                  Simulate 30m
+                </button>
+                <button id="sim6h"
+                  class="px-3 py-2 rounded-xl glass border border-white/10 hover:border-cyan-300/30 text-sm">
+                  Simulate 6h
+                </button>
+              </div>
+
+              <div id="simOut" class="mt-3 text-xs text-gray-300">
+                جاهز… اختر 30m أو 6h بعد ما تطلع الخطة.
+              </div>
+            </div>
+
+            <div class="mt-3 text-xs text-gray-400">
+              Snapshot يُرسل (KPIs + Ships + Alerts + Utilization + Scenario + Role).
+            </div>
+          </div>
+
+          <div class="lg:col-span-2">
+            <div id="copilotOut" class="space-y-3">
+              <div class="rounded-2xl bg-white/5 border border-white/10 p-4 text-sm text-gray-200 copilot-card">
+                جاهز… اضغطي Demo أو ارسلي سؤال 👆
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-5 grid lg:grid-cols-3 gap-5">
+        <div class="glass neon rounded-3xl p-6 reveal lg:col-span-2" data-role="ops berth safety">
+          <div class="flex items-center justify-between">
+            <h3 class="text-lg font-bold">السفن القادمة</h3>
+            <span class="text-xs text-gray-400">آخر تحديث: <span id="ships-updated">--</span></span>
+          </div>
+
+          <div class="mt-4 overflow-x-auto">
+            <table class="w-full text-sm">
+              <thead class="text-gray-400">
+                <tr class="border-b border-white/10">
+                  <th class="text-left py-3 pr-3 font-semibold" dir="ltr">Vessel</th>
+                  <th class="text-left py-3 pr-3 font-semibold" dir="ltr">ETA</th>
+                  <th class="text-left py-3 pr-3 font-semibold" dir="ltr">Berth</th>
+                  <th class="text-left py-3 pr-3 font-semibold" dir="ltr">Status</th>
+                  <th class="text-left py-3 font-semibold" dir="ltr">Risk</th>
+                </tr>
+              </thead>
+              <tbody id="ships-body" class="text-gray-200"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="glass neon rounded-3xl p-6 reveal" data-role="ops energy safety">
+          <div class="flex items-center justify-between">
+            <h3 class="text-lg font-bold">تنبيهات ذكية</h3>
+            <span class="text-xs text-gray-400">الآن</span>
+          </div>
+
+          <div id="alerts-list" class="mt-4 space-y-3"></div>
+
+          <div class="mt-5 text-xs text-gray-400">
+            التنبيهات ناتجة عن منطق/نماذج (ازدحام ETA، شذوذ المعدات، ارتفاع الطاقة).
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-5 glass neon rounded-3xl p-6 reveal" data-role="ops berth energy">
+        <div class="flex items-center justify-between">
+          <h3 class="text-lg font-bold">استغلال الأرصفة (اليوم)</h3>
+          <span class="text-xs text-gray-400">آخر تحديث: <span id="util-updated">--</span></span>
+        </div>
+
+        <div id="util-bars" class="mt-6 grid md:grid-cols-12 gap-2 items-end"></div>
+        <div class="mt-3 text-xs text-gray-400">كل عمود = نافذة 2 ساعة • ارتفاع العمود = % الاستغلال</div>
+      </div>
+
+      <div class="mt-5 glass neon rounded-3xl p-6 reveal" data-role="ops berth energy safety">
+        <div class="flex items-center justify-between">
+          <h3 class="text-lg font-bold">Audit Log</h3>
+          <button id="clearLog"
+            class="px-3 py-2 rounded-xl glass border border-white/10 hover:border-rose-300/30 hover:text-rose-200 transition text-sm">
+            Clear
+          </button>
+        </div>
+        <div class="mt-3 overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead class="text-gray-400">
+              <tr class="border-b border-white/10">
+                <th class="text-left py-3 pr-3 font-semibold" dir="ltr">Time</th>
+                <th class="text-right py-3 pr-3 font-semibold">Scenario</th>
+                <th class="text-right py-3 pr-3 font-semibold">Role</th>
+                <th class="text-right py-3 pr-3 font-semibold">Event</th>
+                <th class="text-right py-3 pr-3 font-semibold">Status</th>
+              </tr>
+            </thead>
+            <tbody id="logBody" class="text-gray-200"></tbody>
+          </table>
+        </div>
+        <div class="mt-3 text-xs text-gray-400">يُحفظ محليًا (localStorage) للتدقيق والحوكمة.</div>
+      </div>
+
+      <footer class="py-10 text-center text-gray-500">
+        <p class="mt-3">© 2025 AI Port Master</p>
+      </footer>
+    </div>
+  </main>
+
+  <div id="drawerBackdrop" class="drawer-backdrop"></div>
+  <aside id="drawer" class="drawer">
+    <div class="p-5 border-b border-white/10 flex items-center justify-between">
+      <div>
+        <div class="font-extrabold text-lg">Explainability</div>
+        <div class="text-xs text-gray-400 mt-0.5">ليش النظام اختار هالخطة؟</div>
+      </div>
+      <button id="drawerClose" class="px-3 py-2 rounded-xl glass border border-white/10 hover:border-rose-300/30 hover:text-rose-200 transition text-sm">Close</button>
+    </div>
+
+    <div class="p-5 space-y-4 overflow-y-auto" style="height: calc(100vh - 78px);">
+      <div class="glass border border-white/10 rounded-2xl p-4">
+        <div class="text-sm font-bold text-gray-200">Top Reasons</div>
+        <ul id="expReasons" class="mt-2 text-sm text-gray-300 space-y-1"></ul>
+      </div>
+
+      <div class="glass border border-white/10 rounded-2xl p-4">
+        <div class="text-sm font-bold text-gray-200">Data Used</div>
+        <ul id="expDataUsed" class="mt-2 text-sm text-gray-300 space-y-1"></ul>
+      </div>
+
+      <div class="glass border border-white/10 rounded-2xl p-4">
+        <div class="text-sm font-bold text-gray-200">Missing Data</div>
+        <ul id="expMissing" class="mt-2 text-sm text-gray-300 space-y-1"></ul>
+      </div>
+
+      <div class="text-xs text-gray-400">
+        الهدف: قرار قابل للتفسير + قابل للتدقيق.
+      </div>
+    </div>
+  </aside>
+
+  <script>
+    const els = document.querySelectorAll('.reveal');
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('show'); });
+    }, { threshold: 0.12 });
+    els.forEach(el => io.observe(el));
+  </script>
+
+  <script src="assets/js/dashboard.js"></script>
+  <script src="assets/js/public-chat-widget.js"></script>
+</body>
+</html>

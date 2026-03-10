@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Port Master</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    html { scroll-behavior: smooth; }
+    body { direction: rtl; }
+
+    .bg-anim {
+      background: radial-gradient(1200px 600px at 20% 10%, rgba(0,229,255,0.14), transparent 60%),
+                  radial-gradient(900px 500px at 80% 20%, rgba(106,56,251,0.16), transparent 55%),
+                  linear-gradient(180deg, #07121E 0%, #05070C 60%, #000 100%);
+    }
+    .glass {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.10);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+    .neon {
+      box-shadow:
+        0 0 0 1px rgba(0,229,255,0.15),
+        0 0 30px rgba(0,229,255,0.10),
+        0 0 60px rgba(106,56,251,0.10);
+    }
+    @keyframes floaty { 0%,100%{ transform: translateY(0);} 50%{ transform: translateY(-8px);} }
+    .floaty { animation: floaty 6s ease-in-out infinite; }
+    .reveal { opacity: 0; transform: translateY(12px); transition: 700ms ease; }
+    .reveal.show { opacity: 1; transform: translateY(0); }
+  </style>
+</head>
+
+<body class="text-white bg-black">
+
+  <header class="fixed top-0 w-full z-50">
+    <nav class="mx-auto max-w-6xl px-4">
+      <div class="mt-4 glass neon rounded-2xl px-5 py-3 flex items-center justify-between">
+        <a href="index.html" class="flex items-center gap-3">
+          <div class="h-9 w-9 rounded-xl bg-cyan-500/15 border border-cyan-300/20 flex items-center justify-center">
+            <span class="text-cyan-300 font-bold">AI</span>
+          </div>
+          <div>
+            <div class="font-extrabold tracking-wide">AI Port Master</div>
+            <div class="text-xs text-gray-400 -mt-0.5">مُحسّن عمليات الميناء الذكي</div>
+          </div>
+        </a>
+
+        <div class="hidden md:flex items-center gap-7 text-sm text-gray-200">
+          <a href="#features" class="hover:text-cyan-300 transition">المميزات</a>
+          <a href="dashboard.html" class="hover:text-cyan-300 transition">لوحة التحكم</a>
+          <a href="how.html" class="hover:text-cyan-300 transition">كيف يعمل</a>
+          <a href="contact.php" class="hover:text-cyan-300 transition">تواصل معنا</a>
+          <a href="incident.html" class="hover:text-cyan-300 transition">البلاغات الذكية</a>
+          <a href="shift.html" class="hover:text-cyan-300 transition">تخطيط الشفتات</a>
+          <a href="energy.html" class="hover:text-cyan-300 transition">محسن الطاقة</a>
+          <a href="training.html" class="hover:text-cyan-300 transition">التدريب الذكي</a>
+          <a href="maintenance.html" class="hover transition">الصيانة التنبؤية</a>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <a href="dashboard.html" class="px-4 py-2 rounded-xl glass border border-white/10 hover:border-cyan-300/30 hover:text-cyan-200 transition text-sm">
+            عرض الديمو
+          </a>
+
+          <a href="contact.php" class="px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-400 to-violet-500 text-black font-semibold hover:opacity-90 transition text-sm">
+            طلب وصول
+          </a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <section class="bg-anim min-h-screen pt-28">
+    <div class="mx-auto max-w-6xl px-4 pt-10 pb-10">
+      <div class="grid lg:grid-cols-2 gap-10 items-center">
+
+        <div class="reveal">
+          <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full glass border border-white/10 text-sm text-gray-200">
+            <span class="h-2 w-2 rounded-full bg-cyan-300"></span>
+            تحسين لحظي • ذكاء تنبؤي • استدامة
+          </div>
+
+          <h1 class="mt-6 text-4xl md:text-6xl font-extrabold leading-tight">
+            شغّل الموانئ مثل
+            <span class="text-cyan-300">الساعة</span> —
+            <span class="bg-gradient-to-r from-cyan-300 to-violet-400 bg-clip-text text-transparent">بذكاء اصطناعي</span>
+          </h1>
+
+          <p class="mt-5 text-lg text-gray-300 max-w-xl">
+            حسّن توزيع الأرصفة، وجدولة الرافعات، وتدفّق الشاحنات، واستهلاك الطاقة عبر تنبؤات وقرارات مدعومة بالذكاء الاصطناعي.
+          </p>
+
+          <div class="mt-7 flex flex-wrap gap-3">
+            <a href="contact.php" class="px-6 py-3 rounded-2xl bg-gradient-to-r from-cyan-400 to-violet-500 text-black font-semibold hover:opacity-90 transition">
+              طلب عرض تجريبي
+            </a>
+
+            <a href="dashboard.html" class="px-6 py-3 rounded-2xl glass border border-white/10 hover:border-cyan-300/30 hover:text-cyan-200 transition">
+              مشاهدة لوحة التحكم
+            </a>
+
+            <a href="how.html" class="px-6 py-3 rounded-2xl text-gray-200 hover:text-white transition">
+              كيف يعمل ←
+            </a>
+          </div>
+
+          <div class="mt-10 grid sm:grid-cols-3 gap-4">
+            <div class="glass neon rounded-2xl p-5 reveal kpi-card">
+              <div class="text-sm text-gray-400">وقت انتظار السفن</div>
+              <div class="mt-2 text-3xl font-extrabold text-cyan-300">
+                ↓ <span class="kpi count" id="kpi-wait" data-suffix="%">--</span>
+              </div>
+              <div class="mt-1 text-xs text-gray-400">تقليل غرامات التأخير والازدحام</div>
+            </div>
+
+            <div class="glass neon rounded-2xl p-5 reveal kpi-card">
+              <div class="text-sm text-gray-400">معدل الإنتاجية</div>
+              <div class="mt-2 text-3xl font-extrabold text-white">
+                ↑ <span class="kpi count" id="kpi-throughput" data-suffix="%">--</span>
+              </div>
+              <div class="mt-1 text-xs text-gray-400">مناولات أكثر بالساعة</div>
+            </div>
+
+            <div class="glass neon rounded-2xl p-5 reveal kpi-card">
+              <div class="text-sm text-gray-400">انبعاثات CO₂</div>
+              <div class="mt-2 text-3xl font-extrabold text-violet-300">
+                ↓ <span class="kpi count" id="kpi-co2" data-suffix="%">--</span>
+              </div>
+              <div class="mt-1 text-xs text-gray-400">استهلاك طاقة أذكى</div>
+            </div>
+          </div>
+
+          <div id="kpi-status" class="mt-4 text-xs text-gray-500 reveal">
+            جاري تحميل المؤشرات…
+          </div>
+        </div>
+
+        <div class="reveal flex justify-center lg:justify-start">
+          <div class="relative w-full max-w-md">
+            <div class="absolute -top-10 -left-10 h-40 w-40 rounded-full bg-cyan-400/20 blur-3xl"></div>
+            <div class="absolute -bottom-8 -right-10 h-44 w-44 rounded-full bg-violet-500/20 blur-3xl"></div>
+
+            <div class="glass neon rounded-3xl p-7 floaty">
+              <div class="text-sm text-gray-400">الهوية</div>
+
+              <div class="relative mt-4 flex justify-center">
+                <div class="absolute w-64 h-64 bg-cyan-400/20 blur-3xl rounded-full"></div>
+                <img
+                  src="images/ai-port-master.png"
+                  alt="AI Port Master Logo"
+                  width="280"
+                  class="relative rounded-2xl opacity-95 object-contain"
+                />
+              </div>
+
+              <div class="mt-5 text-sm text-gray-300">
+                <span class="text-cyan-300 font-semibold">AI Port Master</span> —
+                عقل ذكي متصل بميناء حديث لاتخاذ قرارات تشغيلية أسرع وأدق.
+              </div>
+            </div>
+
+            <div class="mt-4 glass border border-white/10 rounded-2xl px-5 py-4">
+              <div class="flex items-center justify-between text-sm">
+                <span class="text-gray-300">التنبيه القادم</span>
+                <span class="text-cyan-300 font-semibold">خطر ازدحام ETA</span>
+              </div>
+              <div class="mt-2 h-2 rounded-full bg-white/10 overflow-hidden">
+                <div class="h-2 w-2/3 bg-gradient-to-r from-cyan-400 to-violet-500"></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section id="features" class="py-20 bg-[#05070C]">
+    <div class="mx-auto max-w-6xl px-4">
+      <div class="reveal text-center">
+        <h2 class="text-4xl font-extrabold">
+          مركز قيادة الميناء <span class="text-cyan-300">بالذكاء الاصطناعي</span>
+        </h2>
+        <p class="mt-3 text-gray-400 max-w-2xl mx-auto">
+          منصة جاهزة كمنتج: تنبؤ + تحسين + ذكاء طاقة — في واجهة واحدة.
+        </p>
+      </div>
+
+      <div class="mt-10 grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div class="glass neon rounded-2xl p-6 reveal">
+          <div class="text-cyan-300 font-semibold">مُحسّن الأرصفة</div>
+          <p class="mt-2 text-gray-300">أفضل رصيف وأفضل توقيت لتقليل انتظار السفن.</p>
+        </div>
+
+        <div class="glass neon rounded-2xl p-6 reveal">
+          <div class="text-cyan-300 font-semibold">منسّق الرافعات</div>
+          <p class="mt-2 text-gray-300">رفع المناولات/ساعة عبر جدولة ذكية للرافعات.</p>
+        </div>
+
+        <div class="glass neon rounded-2xl p-6 reveal">
+          <div class="text-cyan-300 font-semibold">إدارة بوابات الشاحنات</div>
+          <p class="mt-2 text-gray-300">حجوزات وقتية وتوقع طوابير لتدفق أفضل.</p>
+        </div>
+
+        <div class="glass neon rounded-2xl p-6 reveal">
+          <div class="text-cyan-300 font-semibold">ذكاء ساحة الحاويات</div>
+          <p class="mt-2 text-gray-300">توجيه أفضل للحاويات لتقليل المناولات الداخلية.</p>
+        </div>
+
+        <div class="glass neon rounded-2xl p-6 reveal">
+          <div class="text-cyan-300 font-semibold">صيانة تنبؤية</div>
+          <p class="mt-2 text-gray-300">كشف مبكر للأعطال لتفادي توقف المعدات.</p>
+        </div>
+
+        <div class="glass neon rounded-2xl p-6 reveal">
+          <div class="text-cyan-300 font-semibold">محرك الاستدامة</div>
+          <p class="mt-2 text-gray-300">موازنة الطاقة وتقارير CO₂ مع توصيات ذكية.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="py-10 text-center text-gray-500 bg-black">
+    <p class="text-lg">ابتكار يرتكز على البيانات. مُصمم للموانئ.</p>
+    <p class="mt-3">© 2025 AI Port Master</p>
+  </footer>
+
+  <script>
+    const els = document.querySelectorAll('.reveal');
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) e.target.classList.add('show');
+      });
+    }, { threshold: 0.12 });
+    els.forEach(el => io.observe(el));
+
+    function animateNumber(el, from, to, duration = 800) {
+      const start = performance.now();
+      function tick(now) {
+        const p = Math.min(1, (now - start) / duration);
+        const val = Math.round(from + (to - from) * p);
+        el.textContent = val;
+        if (p < 1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    }
+
+    async function fetchJSON(path) {
+      const res = await fetch(path, { cache: "no-store" });
+      if (!res.ok) throw new Error(`Cannot load ${path} (status ${res.status})`);
+      return res.json();
+    }
+
+    async function updateKPIs() {
+      const statusEl = document.getElementById("kpi-status");
+      const waitEl = document.getElementById("kpi-wait");
+      const thrEl  = document.getElementById("kpi-throughput");
+      const co2El  = document.getElementById("kpi-co2");
+
+      const suffixWait = waitEl?.dataset?.suffix || "";
+      const suffixThr  = thrEl?.dataset?.suffix || "";
+      const suffixCo2  = co2El?.dataset?.suffix || "";
+
+      const prevWait = parseInt(waitEl?.textContent) || 0;
+      const prevThr  = parseInt(thrEl?.textContent) || 0;
+      const prevCo2  = parseInt(co2El?.textContent) || 0;
+
+      try {
+        const data = await fetchJSON("data/kpis.json");
+
+        const nextWait = Number(data.vessel_waiting_time);
+        const nextThr  = Number(data.port_throughput);
+        const nextCo2  = Number(data.co2_emissions);
+
+        if ([nextWait, nextThr, nextCo2].some(n => Number.isNaN(n))) {
+          throw new Error("kpis.json has invalid numbers");
+        }
+
+        animateNumber(waitEl, prevWait, nextWait);
+        animateNumber(thrEl,  prevThr,  nextThr);
+        animateNumber(co2El,  prevCo2,  nextCo2);
+
+        setTimeout(() => {
+          if(waitEl) waitEl.textContent = nextWait + suffixWait;
+          if(thrEl)  thrEl.textContent  = nextThr + suffixThr;
+          if(co2El)  co2El.textContent  = nextCo2 + suffixCo2;
+        }, 820);
+
+        if (statusEl) {
+          const ts = data.updated_at ? ` • Updated: ${data.updated_at}` : "";
+          statusEl.textContent = "تم تحميل المؤشرات من data/kpis.json" + ts;
+        }
+      } catch (e) {
+        console.error("KPI update failed:", e);
+        if (statusEl) statusEl.textContent = "مؤشرات تجريبية (تعذّر تحميل kpis.json).";
+      }
+    }
+
+    updateKPIs();
+    setInterval(updateKPIs, 10000);
+  </script>
+  <script src="assets/js/public-chat-widget.js"></script>
+</body>
+</html>
